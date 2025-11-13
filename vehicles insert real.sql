@@ -1,0 +1,8 @@
+INSERT INTO vehicle (vehicle_id, vin, model, trim, colour, status, registration)
+VALUES
+	(1, '1FTVW1EV7PWG18146', 'Ford F-150 Lightning', 'XLT EXT', 'AGATE BLACK', 'Available Now', 'AUSEV'),
+	(3, '1FTVW1EL7NWG09734', 'Ford F-150 Lightning', 'XLT SR', 'ANTIMATTER BLUE', 'Available Now', '767KF7'),
+	(4, '1FTVW1EL6PWG36927', 'Ford F-150 Lightning', 'PRO SR', 'OXFORD WHITE', 'Available Now', '778KF7'),
+	(5, '1FTVW1EL3PWG23830', 'Ford F-150 Lightning', 'XLT STD', 'OXFORD WHITE', 'Available Now',''),
+	(6, '1FTVW1EL9PWG44620', 'Ford F-150 Lightning', 'PRO STD', 'OXFORD WHITE', 'Available Now','896LO7')
+
