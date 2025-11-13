@@ -4,6 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials"
 
 import { Session } from "next-auth"
 
+//NextAuth setup: Not really sure how this works
+
 declare module "next-auth" {
   interface Session {
     user?: {
@@ -16,13 +18,13 @@ declare module "next-auth" {
 
 const handler = NextAuth({
   providers: [
-    // Example: Google login
+    //Google Login
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
 
-    // Example: Credentials (email/password)
+    //Credentials - Email and Password
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -30,7 +32,7 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Replace with real DB lookup
+        //Needs to replaced with real DB lookup
         if (
           credentials?.email === "test@example.com" &&
           credentials?.password === "1234"
@@ -43,7 +45,7 @@ const handler = NextAuth({
   ],
 
   session: {
-    strategy: "jwt", // you can also use "database" if storing sessions
+    strategy: "jwt", //Use "database" if storing sessions
   },
 
   callbacks: {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "../db";
 
-// GET handler to fetch all bookings
+//GET handler to fetch all bookings to show on calendars
 export async function GET() {
   try {
     const result = await pool.query("SELECT * FROM booking ORDER BY booking_id");
@@ -12,13 +12,13 @@ export async function GET() {
   }
 }
 
-// POST handler to create a new booking
+//POST handler to create a new booking for Make Booking
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { vehicle_id, name, email, phone, start_date, end_date } = body;
 
-    // Basic validation
+    //Basic validation to make sure all fields are provided
     if (!vehicle_id || !name || !email || !phone || !start_date || !end_date) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// PUT handler to update an existing booking
+//PUT handler to update an existing booking from the view/edit page
 export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();

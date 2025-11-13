@@ -43,21 +43,24 @@ function getAllBookedDates(year: number, bookings: any[], vehicles: any[], categ
   return bookedDates;
 }
 
-// --- EditBookingModal ---
+{/*Edit Booking Modal*/}
 function EditBookingModal({
   booking,
   vehicle,
   bookings,
   onClose,
   onSave,
+  calendarYear,
+  setCalendarYear,
 }: {
   booking: any;
   vehicle: any;
   bookings: any[];
   onClose: () => void;
   onSave: (updatedBooking: any) => void;
+  calendarYear: number;
+  setCalendarYear: Dispatch<SetStateAction<number>>;
 }) {
-  const year = new Date().getFullYear();
   const [form, setForm] = useState({
     name: booking.name,
     email: booking.email,
@@ -67,7 +70,7 @@ function EditBookingModal({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // 🆕 Delete state
+ {/*Delete State*/}
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -98,6 +101,7 @@ function EditBookingModal({
     }
   });
 
+  {/*Runs when a date is clicked*/}
   function handleDateClick(dateStr: string) {
     if (bookedDates.has(dateStr)) return;
     if (selectedDates.length === 0 || selectedDates.length === 2) {
@@ -133,57 +137,73 @@ function EditBookingModal({
   }
 
   async function handleSave() {
-    if (!form.name || !form.email || !form.phone) {
-      setError("Please fill in all fields.");
-      setTimeout(() => setError(null), 2000);
-      return;
-    }
-    if (selectedDates.length !== 2) {
-      setError("Please select a start and end date.");
-      setTimeout(() => setError(null), 2000);
-      return;
-    }
-
-    const [start_date, end_date] =
-      selectedDates[0] < selectedDates[1] ? [selectedDates[0], selectedDates[1]] : [selectedDates[1], selectedDates[0]];
-
-    const updatedBooking = {
-      ...booking,
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      start_date,
-      end_date,
-    };
-
-    try {
-      const res = await fetch(`/api/bookings`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedBooking),
-      });
-
-      if (!res.ok) throw new Error("Failed to update booking");
-
-      const saved = await res.json();
-      onSave(saved);
-      setSuccess("Changes successfully saved!");
-      setTimeout(() => {
-        setSuccess(null);
-        onClose();
-      }, 1500);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to update booking in database.");
-      setTimeout(() => setError(null), 2000);
-    }
+  if (!form.name || !form.email || !form.phone) {
+    setError("Please fill in all fields.");
+    setTimeout(() => setError(null), 2000);
+    return;
+  }
+  if (selectedDates.length !== 2) {
+    setError("Please select a start and end date.");
+    setTimeout(() => setError(null), 2000);
+    return;
   }
 
-  function renderMonth(month: number) {
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDay = new Date(year, month, 1).getDay();
-    const monthName = new Date(year, month, 1).toLocaleString("default", { month: "long" });
+  const [start_date, end_date] =
+    selectedDates[0] < selectedDates[1] ? [selectedDates[0], selectedDates[1]] : [selectedDates[1], selectedDates[0]];
 
+  {/*Check if any changes were actually made*/}
+  if (
+    form.name === booking.name &&
+    form.email === booking.email &&
+    form.phone === booking.phone &&
+    start_date === booking.start_date &&
+    end_date === booking.end_date
+  ) {
+    setSuccess("No changes made.");
+    setTimeout(() => setSuccess(null), 1500);
+    return;
+  }
+
+  const updatedBooking = {
+    ...booking,
+    name: form.name,
+    email: form.email,
+    phone: form.phone,
+    start_date,
+    end_date,
+  };
+
+  {/*Update Bookings to Database*/}
+  try {
+    const res = await fetch(`/api/bookings`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedBooking),
+    });
+
+    if (!res.ok) throw new Error("Failed to update booking");
+
+    const saved = await res.json();
+    onSave(saved);
+    setSuccess("Changes successfully saved!");
+    setTimeout(() => {
+      setSuccess(null);
+      onClose();
+    }, 1500);
+  } catch (err) {
+    console.error(err);
+    setError("Failed to update booking in database.");
+    setTimeout(() => setError(null), 2000);
+  }
+}
+
+
+  function renderMonth(month: number) {
+    const daysInMonth = new Date(calendarYear, month + 1, 0).getDate();
+    const firstDay = new Date(calendarYear, month, 1).getDay();
+    const monthName = new Date(calendarYear, month, 1).toLocaleString("default", { month: "long" });
+    
+    {/*Calendar*/}
     return (
       <div key={month} className="mb-6">
         <div className="font-bold text-center mb-1">{monthName}</div>
@@ -191,7 +211,7 @@ function EditBookingModal({
           {["Su","Mo","Tu","We","Th","Fr","Sa"].map(d => <div key={d} className="font-semibold">{d}</div>)}
           {Array(firstDay).fill(null).map((_, i) => <div key={"empty-" + i}></div>)}
           {Array(daysInMonth).fill(null).map((_, i) => {
-            const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(i+1).padStart(2,"0")}`;
+            const dateStr = `${calendarYear}-${String(month+1).padStart(2,"0")}-${String(i+1).padStart(2,"0")}`;
             const isBooked = bookedDates.has(dateStr);
             const isSelected = selectedDates.includes(dateStr);
             let isInRange = false;
@@ -224,17 +244,26 @@ function EditBookingModal({
       <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-xl min-w-[340px] max-h-[80vh] overflow-y-auto relative w-full max-w-2xl">
         <button className="absolute top-2 right-4 text-3xl" onClick={onClose}>&times;</button>
         <h3 className="text-xl font-bold mb-4 text-center">Edit Booking</h3>
+
+        {/*Edit Dates*/}
         <div className="mb-4">
           <div className="font-semibold mb-1">Edit Dates:</div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array(12).fill(null).map((_, month) => renderMonth(month))}
           </div>
-          <div className="mt-3 text-xs text-gray-500 text-center">
-            <span className="inline-block w-3 h-3 bg-red-200 mr-1 align-middle" /> Booked &nbsp;
-            <span className="inline-block w-3 h-3 bg-green-100 mr-1 align-middle" /> Available &nbsp;
-            <span className="inline-block w-3 h-3 bg-blue-400 mr-1 align-middle" /> Selected
-          </div>
         </div>
+
+        {/*Calendar Year Toggle*/}
+        <div className="fixed top-19 right-48">
+          <button
+            className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 font-semibold"
+            onClick={() => setCalendarYear(prev => (prev === new Date().getFullYear() ? new Date().getFullYear() + 1 : new Date().getFullYear()))}
+          >
+            {calendarYear === new Date().getFullYear() + 1 ? `← Back to ${new Date().getFullYear()} Calendar` : `Go to ${new Date().getFullYear() + 1} Calendar →`}
+          </button>
+        </div>
+
+        {/*Edit Details*/}
         <div className="border-t pt-4">
           <h4 className="font-semibold mb-2 text-center">Edit Details</h4>
           <div className="flex flex-col gap-2">
@@ -248,7 +277,7 @@ function EditBookingModal({
               Save Changes
             </button>
 
-            {/* 🆕 Delete Button */}
+            {/*Delete Button*/}
             <button
               className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition text-lg font-bold mx-auto mt-2"
               onClick={() => setShowConfirmDelete(true)}
@@ -264,7 +293,7 @@ function EditBookingModal({
           </div>
         </div>
 
-        {/* 🆕 Delete Confirmation Popup */}
+        {/*Delete Confirmation*/}
         {showConfirmDelete && (
           <div className="relative -mt-38 z-10 flex flex-col gap-0 py-0">
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center">
@@ -294,37 +323,18 @@ function EditBookingModal({
   );
 }
 
-// --- BookingsForDateModal ---
-// ... Rest of your file remains unchanged
-
-
-// --- BookingsForDateModal ---
-function BookingsForDateModal({
-  date,
-  bookingsOnDate,
-  vehicles,
-  onClose,
-  onEdit,
-  categoryFilter,
-  searchTerm,
-}: {
-  date: string;
-  bookingsOnDate: any[];
-  vehicles: any[];
-  onClose: () => void;
-  onEdit: (booking: any, vehicle: any) => void;
-  categoryFilter: 'ALL' | 'XLT' | 'PRO';
-  searchTerm: string;
-}) {
+{/*Booking Date Modal*/}
+function BookingsForDateModal({ date, bookingsOnDate, vehicles, onClose, onEdit, categoryFilter, searchTerm }: any) {
   const lowerSearch = searchTerm.toLowerCase();
-  const filteredBookings = bookingsOnDate.filter(b => {
-    const vehicle = vehicles.find(v => v.vehicle_id === b.vehicle_id);
+  const filteredBookings = bookingsOnDate.filter((b: { vehicle_id: any; name: string; }) => {
+    const vehicle = vehicles.find((v: { vehicle_id: any; }) => v.vehicle_id === b.vehicle_id);
     if (!vehicle) return false;
     if (categoryFilter !== 'ALL' && !vehicle.trim.includes(categoryFilter)) return false;
     if (searchTerm && !b.name.toLowerCase().includes(lowerSearch)) return false;
     return true;
   });
 
+  {/*Pop-up Menu for when a date is clicked on*/}
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-xl min-w-[300px] max-w-lg w-full max-h-[70vh] overflow-y-auto relative">
@@ -334,12 +344,12 @@ function BookingsForDateModal({
           <div className="text-center text-gray-500">No bookings on this day.</div>
         ) : (
           <ul className="flex flex-col gap-4">
-            {filteredBookings.map((booking) => {
-              const vehicle = vehicles.find(v => v.vehicle_id === booking.vehicle_id);
+            {filteredBookings.map((booking: { vehicle_id: any; booking_id: Key | null | undefined; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; start_date: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; end_date: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => {
+              const vehicle = vehicles.find((v: { vehicle_id: any; }) => v.vehicle_id === booking.vehicle_id);
               return (
                 <li key={booking.booking_id} className="border rounded-lg p-4 flex flex-col items-center gap-2 bg-gray-50 dark:bg-gray-800">
                   <div className="text-center">
-                    <span className="font-semibold">Vehicle:</span> {vehicle?.model} {vehicle?.trim} <span className="text-xs text-gray-400">{vehicle?.vin}</span>
+                    <span className="font-semibold">Vehicle:</span> <span className="font-semibold italic">{vehicle?.nickname}</span> <span>{vehicle?.model}</span> <span>{vehicle?.trim}</span> <span className="text-xs text-gray-400">{vehicle?.vin}</span>
                   </div>
                   <div><span className="font-semibold">Booked by:</span> {booking.name}</div>
                   <div><span className="font-semibold">From:</span> {booking.start_date} <span className="font-semibold">To:</span> {booking.end_date}</div>
@@ -359,9 +369,8 @@ function BookingsForDateModal({
   );
 }
 
-// --- YearlyCalendar ---
-function YearlyCalendar({ bookings, onDateClick, vehicles, categoryFilter, searchTerm }: { bookings: any[], onDateClick: (date: string) => void, vehicles: any[], categoryFilter: 'ALL' | 'XLT' | 'PRO', searchTerm: string }) {
-  const year = new Date().getFullYear();
+{/*Yearly Calendar*/}
+function YearlyCalendar({ bookings, onDateClick, vehicles, categoryFilter, searchTerm, year }: any) {
   const bookedDates = getAllBookedDates(year, bookings, vehicles, categoryFilter, searchTerm);
 
   function renderMonth(month: number) {
@@ -399,27 +408,25 @@ function YearlyCalendar({ bookings, onDateClick, vehicles, categoryFilter, searc
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array(12).fill(null).map((_, month) => renderMonth(month))}
       </div>
-      <div className="mt-3 text-xs text-gray-500 text-center">
-        <span className="inline-block w-3 h-3 bg-red-200 mr-1 align-middle" /> Booked &nbsp;
-        <span className="inline-block w-3 h-3 bg-green-100 mr-1 align-middle" /> Available
-      </div>
     </div>
   );
 }
 
-// --- Main Home Component ---
+{/*Main Home Component*/}
 export default function Home() {
   const [vehicles, setVehicles] = useState<any[]>([]);
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState<'ALL'|'XLT'|'PRO'>('ALL');
   const [searchTerm, setSearchTerm] = useState('');
+  const [calendarYear, setCalendarYear] = useState<number>(new Date().getFullYear()); // <-- This Year default
 
   const [selectedDate, setSelectedDate] = useState<string|null>(null);
   const [editBooking, setEditBooking] = useState<any|null>(null);
   const [editVehicle, setEditVehicle] = useState<any|null>(null);
   const [isListView, setIsListView] = useState(false);
 
+  {/*Fetches vehicle and booking data*/}
   useEffect(() => {
     async function loadData() {
       try {
@@ -450,7 +457,7 @@ export default function Home() {
   function handleEdit(booking: any, vehicle: any) {
     setEditBooking(booking);
     setEditVehicle(vehicle);
-    setIsListView(false); // return to calendar when editing
+    setIsListView(false);
   }
 
   function handleSave(updatedBooking: any) {
@@ -460,26 +467,25 @@ export default function Home() {
   return (
     <div className="font-sans flex flex-col items-center justify-start min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-900 dark:to-gray-800">
       <main className="w-full max-w-4xl mt-16 p-8 rounded-3xl shadow-xl bg-white/80 dark:bg-gray-900/80 flex flex-col items-center gap-8">
+        {/*Logos*/}
         <div className="flex flex-row items-center justify-center gap-8">
           <Image src="/bosscap.png" alt="Bosscap Logo" width={160} height={40} className="object-contain" priority />
           <Image src="/amq.png" alt="AMQ Logo" width={220} height={60} className="object-contain" priority />
         </div>
-        <div className="absolute top-5 right-3">
-          <Link
-            href="/make_booking"
-            className="px-6 py-3 rounded-lg bg-purple-600 text-white font-semibold text-lg shadow hover:bg-purple-700 transition-colors"
-          >
-           Make Booking
+
+        {/*Navigation Buttons*/}
+        <div className="fixed top-5 right-3">
+          <Link href="/make_booking" className="px-6 py-3 rounded-lg bg-purple-600 text-white font-semibold text-lg shadow hover:bg-purple-700 transition-colors">
+            Make Booking
           </Link>
         </div>
-        <div className="absolute top-5 left-3">
-          <Link
-            href="/"
-            className="px-6 py-3 rounded-lg bg-black text-white font-semibold text-lg shadow hover:bg-gray-800 transition-colors"
-          >
+        <div className="fixed top-5 left-3">
+          <Link href="/" className="px-6 py-3 rounded-lg bg-black text-white font-semibold text-lg shadow hover:bg-gray-800 transition-colors">
            🏠︎
           </Link>
         </div>
+
+        {/*Page Title*/}
         <div className="flex flex-col items-center">
           <h1 className="text-4xl font-extrabold mb-1 tracking-tight text-gray-900 dark:text-white drop-shadow">
             Vehicle Loan System
@@ -492,76 +498,116 @@ export default function Home() {
           </h3>
         </div>
 
-        {/* Search Bar */}
-        <div className="w-full flex justify-center">
-          <input
-            type="text"
-            placeholder="Search by name..."
-            value={searchTerm}
-            onChange={e=>setSearchTerm(e.target.value)}
-            className="w-full md:w-1/2 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
+        {/*Category Tabs + List/Calendar Toggle + Next Year Calendar*/}
+        <div className="sticky top-0 z-10 bg-white dark:bg-gray-2000 p-4 shadow-md rounded-lg w-224">
+          <div className="w-full flex justify-center">
+            <input
+              type="text"
+              placeholder="Search by name..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="w-full md:w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
 
-        {/* Category Tabs + List/Calendar Toggle */}
-        <div className="flex gap-4 mt-2">
-          {(['ALL','XLT','PRO'] as const).map(cat=>(
+          <div className="flex gap-4 mt-2">
+            {(['ALL', 'XLT', 'PRO'] as const).map(cat => (
+              <button
+                key={cat}
+                className={`px-4 py-2 rounded-lg font-semibold ${categoryFilter === cat
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-blue-400 hover:text-white"
+                  }`}
+                onClick={() => setCategoryFilter(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+
             <button
-              key={cat}
-              className={`px-4 py-2 rounded-lg font-semibold ${categoryFilter===cat?"bg-blue-600 text-white":"bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-blue-400 hover:text-white"}`}
-              onClick={()=>setCategoryFilter(cat)}
+              className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition font-semibold"
+              onClick={() => setIsListView(prev => !prev)}
             >
-              {cat}
+              {isListView ? "Calendar View" : "List View"}
             </button>
-          ))}
-          <button
-            className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition font-semibold"
-            onClick={()=>setIsListView(prev=>!prev)}
-          >
-            {isListView ? "Calendar View" : "List View"}
-          </button>
+
+            {/*Calendar Year Toggle*/}
+            {!isListView && (
+            <button
+              className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition font-semibold"
+              onClick={() => setCalendarYear(prev => (prev === new Date().getFullYear() ? new Date().getFullYear() + 1 : new Date().getFullYear()))}
+            >
+               {calendarYear === new Date().getFullYear() + 1 ? `← Back to ${new Date().getFullYear()} Calendar` : `Go to ${new Date().getFullYear() + 1} Calendar →`}
+            </button>
+            )}
+            <div className="mt-3 text-xs text-gray-500 text-center">
+              <span className="inline-block w-5 h-5 bg-red-200 mr-1 align-middle" /> Booked &nbsp;
+              <span className="inline-block w-5 h-5 bg-green-100 mr-1 align-middle" /> Available &nbsp;
+            </div>
+          </div>
         </div>
 
+        {/*List View*/}
         <div className="w-full">
           {isListView ? (
-            <div>  
-              <h3 className="text-lg font-bold mb-4 text-center">All Bookings</h3>
+            <div>
+              <h3 className="text-lg font-bold mb-4 text-center">All Upcoming Bookings</h3>
+
               <ul className="bg-white dark:bg-gray-800 rounded-lg shadow divide-y divide-gray-200 dark:divide-gray-700">
-                {vehicles
-                  .filter(vehicle => categoryFilter === 'ALL' || vehicle.trim.includes(categoryFilter))
-                  .sort((a, b) => a.vehicle_id - b.vehicle_id)
-                  .map(vehicle => {
-                    const vehicleBookings = bookings.filter(
-                      b =>
-                        b.vehicle_id === vehicle.vehicle_id &&
-                        (!searchTerm || b.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                    );
-                    return (
-                      <li key={vehicle.vehicle_id} className="px-4 py-3">
-                        <div className="flex justify-between items-center">
-                          <span className="font-semibold">{vehicle.model} {vehicle.trim} (ID: {vehicle.vehicle_id})</span>
-                          {vehicleBookings.length === 0 && <span className="text-gray-500 text-sm">No bookings</span>}
-                        </div>
-                        {vehicleBookings.length > 0 && (
-                          <ul className="mt-2 space-y-1">
-                            {vehicleBookings.map(booking => (
-                              <li key={booking.booking_id} className="flex justify-between items-center border rounded px-2 py-1 bg-gray-100 dark:bg-gray-700">
-                                <span className="text-sm">
-                                  {booking.name} ({booking.start_date.split('-').reverse().join('/')} - {booking.end_date.split('-').reverse().join('/')})
-                                </span>
-                                <button
-                                  className="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 text-xs"
-                                  onClick={() => { handleEdit(booking, vehicle); setIsListView(prev => !prev); }}
+                {(() => {
+                  const today = new Date().toISOString().slice(0, 10);
+
+                  return vehicles
+                    .filter(vehicle => categoryFilter === 'ALL' || vehicle.trim.includes(categoryFilter))
+                    .sort((a, b) => a.vehicle_id - b.vehicle_id)
+                    .map(vehicle => {
+                      const vehicleBookings = bookings.filter(
+                        b =>
+                          b.vehicle_id === vehicle.vehicle_id &&
+                          b.end_date >= today &&
+                          (!searchTerm || b.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                      );
+
+                      return (
+                        <li key={vehicle.vehicle_id} className="px-4 py-3">
+                          <div className="flex justify-between items-center">
+                            <span className="font-semibold">
+                             {vehicle.nickname} {vehicle.model} {vehicle.trim} (ID: {vehicle.vehicle_id})
+                            </span>
+                            <span className="font-semibold">{vehicle.nickname}</span>
+                            {vehicleBookings.length === 0 && (
+                              <span className="text-gray-500 text-sm">No upcoming bookings</span>
+                            )}
+                          </div>
+
+                          {vehicleBookings.length > 0 && (
+                            <ul className="mt-2 space-y-1">
+                              {vehicleBookings.map(booking => (
+                                <li
+                                  key={booking.booking_id}
+                                  className="flex justify-between items-center border rounded px-2 py-1 bg-gray-100 dark:bg-gray-700"
                                 >
-                                  Edit
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    );
-                  })}
+                                  <span className="text-sm">
+                                    {booking.name} ({booking.start_date.split('-').reverse().join('/')} -{" "}
+                                    {booking.end_date.split('-').reverse().join('/')})
+                                  </span>
+                                  <button
+                                    className="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 text-xs"
+                                    onClick={() => {
+                                      handleEdit(booking, vehicle);
+                                      setIsListView(prev => !prev);
+                                    }}
+                                  >
+                                    Edit
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      );
+                    });
+                })()}
               </ul>
             </div>
           ) : (
@@ -571,16 +617,18 @@ export default function Home() {
               vehicles={vehicles}
               categoryFilter={categoryFilter}
               searchTerm={searchTerm}
+              year={calendarYear}
             />
           )}
         </div>
 
+        {/*Modals*/}
         {selectedDate && (
           <BookingsForDateModal
             date={selectedDate}
             bookingsOnDate={bookingsOnSelectedDate}
             vehicles={vehicles}
-            onClose={()=>setSelectedDate(null)}
+            onClose={() => setSelectedDate(null)}
             onEdit={handleEdit}
             categoryFilter={categoryFilter}
             searchTerm={searchTerm}
@@ -592,11 +640,18 @@ export default function Home() {
             booking={editBooking}
             vehicle={editVehicle}
             bookings={bookings}
-            onClose={()=>{ setEditBooking(null); setEditVehicle(null); }}
+            onClose={() => {
+              setEditBooking(null);
+              setEditVehicle(null);
+            }}
             onSave={handleSave}
+            calendarYear={calendarYear}
+            setCalendarYear={setCalendarYear}
           />
         )}
+
       </main>
     </div>
   );
 }
+

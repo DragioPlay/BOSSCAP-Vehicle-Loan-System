@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="relative font-sans flex flex-col items-center justify-start min-h-screen overflow-hidden">
-      {/* Video Background */}
+      {/*Video Background*/}
       <video
         autoPlay
         loop
@@ -17,7 +17,7 @@ export default function Home() {
       </video>
 
       <main className="relative w-full max-w-xl mt-16 p-8 rounded-3xl shadow-xl bg-white dark:bg-white-900/80 flex flex-col items-center gap-8 z-10">
-        {/* Logos side by side */}
+        {/*BOSSCAP and AMQ logo side by side*/}
         <div className="flex flex-row items-center justify-center gap-8">
           <Image
             src="/bosscap.png"
@@ -36,7 +36,7 @@ export default function Home() {
             priority
           />
         </div>
-        {/* Titles */}
+        {/*Titles*/}
         <div className="flex flex-col items-center">
           <h1 className="text-4xl font-extrabold mb-1 tracking-tight text-gray-900 dark:text-white drop-shadow">
             Vehicle Loan System
@@ -45,19 +45,25 @@ export default function Home() {
             What would you like to do?
           </h2>
         </div>
-        {/* Action Buttons */}
+        {/*Page Buttons*/}
         <div className="flex flex-row gap-6 mt-4">
           <Link
             href="/make_booking"
-            className="px-6 py-3 rounded-lg bg-purple-600 text-white font-semibold text-lg shadow hover:bg-purple-700 transition-colors"
+            className="px-4 py-2 rounded-lg bg-purple-600 text-white font-semibold text-lg shadow hover:bg-purple-700 transition-colors"
           >
             Booking a Vehicle
           </Link>
           <Link
             href="/edit-view_booking"
-            className="px-6 py-3 rounded-lg bg-black text-white font-semibold text-lg shadow hover:bg-gray-800 transition-colors"
+            className="px-4 py-2 rounded-lg bg-black text-white font-semibold text-lg shadow hover:bg-gray-800 transition-colors"
           >
             View/Edit Booking
+          </Link>
+          <Link
+            href="/settings"
+            className="px-4 py-2 rounded-lg bg-gray-300 text-gray-1000 font-semibold text-lg shadow hover:bg-gray-400 transition-colors"
+          >
+            ⚙︎
           </Link>
         </div>
       </main>

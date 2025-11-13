@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-// Helper to get all booked dates for a specific vehicle
+{/*Get all booked dates for a specific vehicle*/}
 function getBookedDatesForVehicle(vehicle_id: number, bookings: any[]) {
   const bookedDates = new Set<string>();
   bookings.forEach(b => {
@@ -19,8 +19,9 @@ function getBookedDatesForVehicle(vehicle_id: number, bookings: any[]) {
   return bookedDates;
 }
 
-// Calendar component
+{/*Calendar Component*/}
 function Calendar({
+  year,
   vehicles,
   bookings,
   selectedVehicle,
@@ -28,6 +29,7 @@ function Calendar({
   setSelectedDates,
   vehicleCategory,
 }: {
+  year: number;
   vehicles: any[];
   bookings: any[];
   selectedVehicle: any | null;
@@ -35,8 +37,6 @@ function Calendar({
   setSelectedDates: (dates: string[]) => void;
   vehicleCategory: "ALL" | "XLT" | "PRO";
 }) {
-  const year = new Date().getFullYear();
-
   function isDayFullyBooked(dateStr: string) {
     if (vehicles.length === 0) return false;
 
@@ -60,6 +60,7 @@ function Calendar({
     );
   }
 
+  {/*Selects a Date when it is clicked*/}
   function handleDateClick(dateStr: string) {
     if (isDayFullyBooked(dateStr)) return;
 
@@ -99,16 +100,6 @@ function Calendar({
           {Array(daysInMonth).fill(null).map((_, i) => {
             const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
 
-            const allBookedDates = new Set<string>();
-            bookings.forEach(b => {
-              let current = new Date(b.start_date);
-              const end = new Date(b.end_date);
-              while (current <= end) {
-                allBookedDates.add(`${b.vehicle_id}-${current.toISOString().slice(0, 10)}`);
-                current.setDate(current.getDate() + 1);
-              }
-            });
-
             const isFullyBooked = isDayFullyBooked(dateStr);
             const isVehicleBooked = selectedVehicle ? bookedDatesForVehicle.has(dateStr) : false;
             const isSelected = selectedDates.includes(dateStr);
@@ -131,6 +122,7 @@ function Calendar({
             return (
               <div
                 key={i}
+                id={`calendar-day-${dateStr}`}
                 className={className}
                 onClick={() => handleDateClick(dateStr)}
               >
@@ -140,29 +132,25 @@ function Calendar({
           })}
         </div>
       </div>
-    );
+    )
   }
 
+  {/*Vehicle List*/}
   return (
     <div className="flex-1 w-full p-4 overflow-y-auto">
       <h3 className="text-xl font-bold mb-6 text-center">
         {selectedVehicle
           ? `Calendar for ${selectedVehicle.model} ${selectedVehicle.trim}`
-          : "Select a date range"}
+          : `Select a date range - ${year}`}
       </h3>
       <div className="grid grid-cols-3 gap-6">
         {Array(12).fill(null).map((_, month) => renderMonth(month))}
-      </div>
-      <div className="mt-6 text-sm text-gray-500 text-center">
-        <span className="inline-block w-4 h-4 bg-red-200 mr-2 align-middle" /> Booked &nbsp;
-        <span className="inline-block w-4 h-4 bg-green-100 mr-2 align-middle" /> Available &nbsp;
-        <span className="inline-block w-4 h-4 bg-blue-400 mr-2 align-middle" /> Selected
       </div>
     </div>
   );
 }
 
-// Booking Form Modal
+{/*Booking Form Modal*/}
 function BookingFormModal({ onClose, onBookingCreated, vehicle, selectedDates }: { onClose: () => void; onBookingCreated: () => void; vehicle: any; selectedDates: string[] }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [error, setError] = useState<string | null>(null);
@@ -213,7 +201,8 @@ function BookingFormModal({ onClose, onBookingCreated, vehicle, selectedDates }:
       setTimeout(() => setError(null), 2000);
     }
   }
-
+  
+  {/*Enter User Details pop-up*/}
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-xl min-w-[340px] max-w-sm relative">
@@ -239,7 +228,7 @@ function BookingFormModal({ onClose, onBookingCreated, vehicle, selectedDates }:
   );
 }
 
-// Vehicle Unavailable Modal
+{/*Vehicle Unavailable Modal*/}
 function VehicleUnavailableModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -259,6 +248,7 @@ function VehicleUnavailableModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+{/*Main Components*/}
 export default function Home() {
   const [vehicles, setVehicles] = useState<any[]>([]);
   const [bookings, setBookings] = useState<any[]>([]);
@@ -267,8 +257,11 @@ export default function Home() {
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [showUnavailableModal, setShowUnavailableModal] = useState(false);
+  const [closestAvailableDate, setClosestAvailableDate] = useState<string | null>(null);
   const [vehicleCategory, setVehicleCategory] = useState<"ALL" | "XLT" | "PRO">("ALL");
+  const [calendarYear, setCalendarYear] = useState<number>(new Date().getFullYear());
 
+  {/*Imports all the vehicles and bookings from the database*/}
   async function loadData() {
     try {
       setLoading(true);
@@ -309,6 +302,7 @@ export default function Home() {
     else setSelectedVehicle(vehicle);
   }
 
+  {/*Accounts for timezone offset and sets the date*/}
   function handleGetAnyVehicleASAP() {
     const now = new Date();
     const utcMs = now.getTime() + now.getTimezoneOffset() * 60_000;
@@ -331,7 +325,15 @@ export default function Home() {
         const bookedDates = getBookedDatesForVehicle(vehicle.vehicle_id, bookings);
         if (!bookedDates.has(dateStr)) {
           setSelectedVehicle(vehicle);
-          setSelectedDates([dateStr, dateStr]);
+          setSelectedDates([dateStr]);
+          setClosestAvailableDate(dateStr);
+
+          {/*Auto-scroll to the date in the calendar*/}
+          setTimeout(() => {
+            const el = document.getElementById(`calendar-day-${dateStr}`);
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+          }, 200);
+
           return;
         }
       }
@@ -339,6 +341,8 @@ export default function Home() {
     alert(`No vehicles available in the next ${maxDays} days.`);
   }
 
+
+  {/*Book Now Button Function*/}
   function handleBookNow() {
     if (!selectedVehicle || selectedDates.length !== 2) return;
 
@@ -403,23 +407,29 @@ export default function Home() {
     setSelectedDates([]);
   }
 
+  {/*Filter bookings to the selected year*/}
+  const filteredBookings = bookings.filter(b => {
+    const yearOfBooking = new Date(b.start_date).getFullYear();
+    return yearOfBooking === calendarYear;
+  });
+
   return (
     <div className="font-sans flex flex-col items-center justify-start min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-900 dark:bg-gray-800">
       <main className="w-full max-w-7xl mt-16 p-8 rounded-3xl shadow-xl bg-white/80 dark:bg-gray-900/80 flex flex-col items-center gap-8">
-        {/* Logos and Titles */}
+        {/*Logos and Titles*/}
         <div className="flex flex-row items-center justify-center gap-8 w-full">
           <Image src="/bosscap.png" alt="Bosscap Logo" width={160} height={40} className="object-contain" priority />
           <Image src="/amq.png" alt="AMQ Logo" width={220} height={60} className="object-contain" priority />
         </div>
-        <div className="absolute top-5 right-3">
+        <div className="fixed top-5 right-3">
           <Link
             href="/edit-view_booking"
             className="px-6 py-3 rounded-lg bg-purple-600 text-white font-semibold text-lg shadow hover:bg-purple-700 transition-colors"
           >
-           View/Edit Bookings
+           View/Edit
           </Link>
         </div>
-        <div className="absolute top-5 left-3">
+        <div className="fixed top-5 left-3">
           <Link
             href="/"
             className="px-6 py-3 rounded-lg bg-black text-white font-semibold text-lg shadow hover:bg-gray-800 transition-colors"
@@ -437,15 +447,22 @@ export default function Home() {
           <h3 className="text-l font-italic text-gray-700 dark:text-gray-300 tracking-wide">
             To Book Click a Vehicle and click on the Calendar
           </h3>
+          <div className="mt-6 text-sm text-gra  y-500 text-center">
+          <span className="inline-block w-5 h-5 bg-red-200 mr-2 align-middle" /> Booked &nbsp;
+          <span className="inline-block w-5 h-5 bg-green-100 mr-2 align-middle" /> Available   &nbsp;
+          <span className="inline-block w-5 h-5 bg-blue-400 mr-2 align-middle" /> Selected
+          </div>
         </div>
 
-        {/* Category Filter + ASAP Button */}
+        {/*Category Filter + ASAP Button + Year Toggle*/}
         <div className="flex justify-center items-center gap-4 mb-4">
           <button
             className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-semibold"
             onClick={handleGetAnyVehicleASAP}
           >
-            Get Any Vehicle ASAP
+            {closestAvailableDate
+              ? `A Vehicle is Available: ${closestAvailableDate.split("-").reverse().join("/")}`
+              : "Get Any Vehicle ASAP"}
           </button>
 
           {["ALL", "XLT", "PRO"].map(cat => (
@@ -461,16 +478,25 @@ export default function Home() {
               {cat}
             </button>
           ))}
+
+          <button
+            className={`px-4 py-2 rounded-lg font-semibold transition ${"bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition font-semibold"}`}
+            onClick={() => setCalendarYear(prev => (prev === new Date().getFullYear() + 1 ? new Date().getFullYear() : new Date().getFullYear() + 1))}
+          >
+            {calendarYear === new Date().getFullYear() + 1 ? `← Back to ${new Date().getFullYear()} Calendar` : `Go to ${new Date().getFullYear() + 1} Calendar →`}
+          </button>
         </div>
 
-        {/* Vehicle List + Calendar */}
+        {/*Vehicle List + Calendar*/}
         <div className="flex flex-col lg:flex-row w-full gap-8">
-          {/* Vehicle List */}
+          {/*Vehicle List*/}
           <div className="flex-1 w-full lg:w-1/2">
             <h3 className="font-bold mb-4 text-center">
               {selectedDates.length === 2
-                ? `Available for ${selectedDates[0].split("-").reverse().join("/")} to ${selectedDates[1].split("-").reverse().join("/")}`
-                : 'Vehicles Available'}
+              ? `Available from ${selectedDates[0].split("-").reverse().join("/")} to ${selectedDates[1].split("-").reverse().join("/")}`
+              : selectedDates.length === 1
+              ? `Available from ${selectedDates[0].split("-").reverse().join("/")} to ?`
+              : 'Vehicles Available'}
             </h3>
 
             {availableVehicles.length > 0 ? (
@@ -490,7 +516,8 @@ export default function Home() {
                     >
                       <div>
                         <span className="font-semibold text-gray-900 dark:text-white">{vehicle.vehicle_id} - </span>
-                        <span className="font-semibold text-gray-900 dark:text-white">{vehicle.model}</span>
+                        <span className="font-semibold italic text-gray-900 dark:text-white">{vehicle.nickname }</span>
+                        <span className="ml-2 font-semibold text-gray-900 dark:text-white">{vehicle.model}</span>
                         <span className="ml-2 text-gray-500 dark:text-gray-400">{vehicle.trim}</span>
                         <span className="ml-4 text-xs text-gray-400">{vehicle.vin}</span>
                         {vehicle.isUnavailable && (
@@ -528,11 +555,12 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Calendar */}
+          {/*Calendar*/}
           <div className="flex-1 w-full lg:w-1/2 max-h-[50vh] overflow-y-auto">
             <Calendar
+              year={calendarYear}
               vehicles={vehicles}
-              bookings={bookings}
+              bookings={filteredBookings}
               selectedVehicle={selectedVehicle}
               selectedDates={selectedDates}
               setSelectedDates={setSelectedDates}
@@ -562,9 +590,5 @@ export default function Home() {
     </div>
   );
 }
-
-
-
-
 
 
