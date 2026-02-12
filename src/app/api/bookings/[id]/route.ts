@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "../../db";
 
-//DELETE handler to delete bookings from the database, triggered when someone deletes a booking on the view/edit page
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+// Updated to treat params as a Promise
+export async function DELETE(
+  req: NextRequest, 
+  { params }: { params: Promise<{ id: string }> } // Change this to a Promise
+) {
   try {
-    await pool.query("DELETE FROM booking WHERE booking_id = $1", [params.id]);
+    // Await the params before accessing the id
+    const { id } = await params;
+
+    await pool.query("DELETE FROM booking WHERE booking_id = $1", [id]);
+    
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting booking:", error);
