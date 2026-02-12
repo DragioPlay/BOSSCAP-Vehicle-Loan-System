@@ -214,9 +214,9 @@ function BookingFormModal({ onClose, onBookingCreated, vehicle, selectedDates }:
             <br />
             Dates: {selectedDates[0].split("-").reverse().join("/")} to {selectedDates[1].split("-").reverse().join("/")}
           </div>
-          <input className="border rounded px-2 py-1" name="name" placeholder="Name" value={form.name} onChange={handleInput} />
-          <input className="border rounded px-2 py-1" name="email" placeholder="Email" type="email" value={form.email} onChange={handleInput} />
-          <input className="border rounded px-2 py-1" name="phone" placeholder="Phone" value={form.phone} onChange={handleInput} />
+          <input className="border rounded px-2 py-1" name="name" placeholder="Name*" value={form.name} onChange={handleInput} />
+          <input className="border rounded px-2 py-1" name="email" placeholder="Email*" type="email" value={form.email} onChange={handleInput} />
+          <input className="border rounded px-2 py-1" name="phone" placeholder="Phone*" value={form.phone} onChange={handleInput} />
           <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" onClick={handleBooking}>
             Confirm Booking
           </button>

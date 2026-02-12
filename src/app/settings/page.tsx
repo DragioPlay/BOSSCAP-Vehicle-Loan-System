@@ -141,7 +141,7 @@ function VehicleFormModal({
               value={form.model} 
               onChange={handleChange} 
               className={`border px-2 py-1 rounded ${errors.model ? 'border-red-500' : ''}`} 
-              placeholder="Model" 
+              placeholder="Model*" 
             />
             {showErrors && errors.model && (
               <span className="text-red-500 text-xs">Model is required</span>
@@ -154,7 +154,7 @@ function VehicleFormModal({
               value={form.trim} 
               onChange={handleChange} 
               className={`border px-2 py-1 rounded ${errors.trim ? 'border-red-500' : ''}`} 
-              placeholder="Trim (e.g. XLT / PRO)" 
+              placeholder="Trim (e.g. XLT / PRO)*" 
             />
             {showErrors && errors.trim && (
               <span className="text-red-500 text-xs">Trim is required</span>
@@ -167,7 +167,7 @@ function VehicleFormModal({
               value={form.vin} 
               onChange={handleChange} 
               className={`border px-2 py-1 rounded ${errors.vin ? 'border-red-500' : ''}`} 
-              placeholder="VIN" 
+              placeholder="VIN*" 
             />
             {showErrors && errors.vin && (
               <span className="text-red-500 text-xs">VIN is required</span>
