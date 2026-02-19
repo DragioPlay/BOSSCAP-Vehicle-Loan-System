@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "15.5.3",
+    "next": "16.1.6",
     "next-auth": "^4.24.11",
     "pg": "^8.18.0",
     "react": "19.1.0",
