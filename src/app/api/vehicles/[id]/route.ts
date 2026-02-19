@@ -3,10 +3,10 @@ import pool from "../../db";
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } } // plain object, not Promise
+  { params }: { params: Promise<{ id: string }> } // ⚡ keep it as Promise
 ) {
   try {
-    const { id } = params;
+    const { id } = await params; // ⚡ await the promise
 
     if (!id) {
       return NextResponse.json({ error: "Missing id" }, { status: 400 });
@@ -24,3 +24,4 @@ export async function DELETE(
     return NextResponse.json({ error: "Failed to delete vehicle" }, { status: 500 });
   }
 }
+
