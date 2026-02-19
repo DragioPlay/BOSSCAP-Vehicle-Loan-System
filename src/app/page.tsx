@@ -42,7 +42,7 @@ export default function Home() {
             Vehicle Loan System
           </h1>
           <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 tracking-wide">
-            What would you like to do? (Please use in Light mode)
+            What would you like to do? (Please use app in Light mode)
           </h2>
         </div>
         {/*Page Buttons*/}
