@@ -4,10 +4,10 @@ import pool from "../../db";
 // DELETE /api/vehicles/[id]
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } } // just an object, not a Promise
+  { params }: { params: Promise<{ id: string }> } // ⚡ keep it as Promise
 ) {
   try {
-    const { id } = params;
+    const { id } = await params; // ⚡ await the promise
 
     if (!id) {
       return NextResponse.json({ error: "Missing id" }, { status: 400 });
@@ -31,3 +31,4 @@ export async function DELETE(
     );
   }
 }
+
