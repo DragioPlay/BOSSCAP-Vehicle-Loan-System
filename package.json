@@ -1,4 +1,32 @@
 {
+<<<<<<< HEAD
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "next": "15.5.3",
+    "next-auth": "^4.24.11",
+    "pg": "^8.18.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.2",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+=======
   "dependencies": {
     "next": "^16.1.6",
     "next-auth": "^4.24.11",
@@ -6,5 +34,6 @@
   },
   "devDependencies": {
     "@types/pg": "^8.15.5"
+>>>>>>> fece2578c87a32983d9ab90e70e8f43b37bfe7b6
   }
 }
