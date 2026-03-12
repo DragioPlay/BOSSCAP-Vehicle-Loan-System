@@ -215,16 +215,16 @@ function BookingFormModal({ onClose, onBookingCreated, vehicle, selectedDates }:
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-xl shadow-xl min-w-[340px] max-w-sm relative">
         <button className="absolute top-2 right-4 text-2xl" onClick={onClose}>&times;</button>
-        <h3 className="text-lg font-bold mb-4 text-center">Confirm Booking</h3>
+        <h3 className="text-lg font-bold mb-4 text-center text-gray-900">Confirm Booking</h3>
         <div className="flex flex-col gap-2">
           <div className="text-xs text-gray-500 text-center mb-2">
             Vehicle: {vehicle.model}
             <br />
             Dates: {selectedDates[0].split("-").reverse().join("/")} to {selectedDates[1].split("-").reverse().join("/")}
           </div>
-          <input className="border rounded px-2 py-1" name="name" placeholder="Name*" value={form.name} onChange={handleInput} />
-          <input className="border rounded px-2 py-1" name="email" placeholder="Email*" type="email" value={form.email} onChange={handleInput} />
-          <input className="border rounded px-2 py-1" name="phone" placeholder="Phone*" value={form.phone} onChange={handleInput} />
+          <input className="border rounded px-2 py-1 text-gray-900" name="name" placeholder="Name*" value={form.name} onChange={handleInput} />
+          <input className="border rounded px-2 py-1 text-gray-900" name="email" placeholder="Email*" type="email" value={form.email} onChange={handleInput} />
+          <input className="border rounded px-2 py-1 text-gray-900" name="phone" placeholder="Phone*" value={form.phone} onChange={handleInput} />
           <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" onClick={handleBooking}>
             Confirm Booking
           </button>
