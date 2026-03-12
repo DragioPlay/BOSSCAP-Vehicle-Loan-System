@@ -89,10 +89,10 @@ function Calendar({
 
     return (
       <div key={month} className="mb-8">
-        <div className="font-bold text-center mb-1 text-gray-900">{monthName}</div>
+        <div className="font-bold text-center mb-1" style={{ color: '#111827' }}>{monthName}</div>
         <div className="grid grid-cols-7 gap-1 text-xs">
           {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
-            <div key={d} className="font-semibold text-center text-gray-700">{d}</div>
+            <div key={d} className="font-semibold text-center" style={{ color: '#374151' }}>{d}</div>
           ))}
           {Array(firstDay).fill(null).map((_, i) => (
             <div key={"empty-" + i}></div>
@@ -108,22 +108,32 @@ function Calendar({
               isInRange = dateStr > rangeStart && dateStr < rangeEnd;
             }
 
-            let className = `py-2 rounded text-center cursor-pointer select-none transition-colors text-gray-900 font-medium`;
+            let bgColor = '#dcfce7';   // green-100
+            let textColor = '#111827'; // gray-900
+            let fontWeight = '500';
+            let textDecoration = 'none';
+            let cursor = 'pointer';
+
             if (isVehicleBooked || isFullyBooked) {
-              className += ` line-through bg-red-200 text-gray-600 cursor-not-allowed`;
+              bgColor = '#fecaca';     // red-200
+              textColor = '#4b5563';   // gray-600
+              textDecoration = 'line-through';
+              cursor = 'not-allowed';
             } else if (isSelected) {
-              className += ` bg-blue-500 text-white font-bold`;
+              bgColor = '#3b82f6';     // blue-500
+              textColor = '#ffffff';
+              fontWeight = '700';
             } else if (isInRange) {
-              className += ` bg-blue-200 text-blue-900`;
-            } else {
-              className += ` bg-green-100 hover:bg-blue-100 text-gray-900`;
+              bgColor = '#bfdbfe';     // blue-200
+              textColor = '#1e3a5f';   // blue-900
             }
 
             return (
               <div
                 key={i}
                 id={`calendar-day-${dateStr}`}
-                className={className}
+                className="py-2 rounded text-center select-none transition-colors"
+                style={{ backgroundColor: bgColor, color: textColor, fontWeight, textDecoration, cursor }}
                 onClick={() => handleDateClick(dateStr)}
               >
                 {i + 1}
