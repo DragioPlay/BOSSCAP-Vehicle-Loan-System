@@ -16,7 +16,7 @@ export default function Home() {
         Your browser does not support the video tag.
       </video>
 
-      <main className="relative w-full max-w-xl mt-16 p-8 rounded-3xl shadow-xl bg-white dark:bg-white-900/80 flex flex-col items-center gap-8 z-10">
+      <main className="relative w-full max-w-xl mt-16 p-8 rounded-3xl shadow-xl bg-white bg-white-900/80 flex flex-col items-center gap-8 z-10">
         {/*BOSSCAP and AMQ logo side by side*/}
         <div className="flex flex-row items-center justify-center gap-8">
           <Image
@@ -38,11 +38,11 @@ export default function Home() {
         </div>
         {/*Titles*/}
         <div className="flex flex-col items-center">
-          <h1 className="text-4xl font-extrabold mb-1 tracking-tight text-gray-900 dark:text-white drop-shadow">
+          <h1 className="text-4xl font-extrabold mb-1 tracking-tight text-gray-900 text-white drop-shadow">
             Vehicle Loan System
           </h1>
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 tracking-wide">
-            What would you like to do? (Please use app in Light mode)
+          <h2 className="text-xl font-semibold text-gray-700 text-gray-300 tracking-wide">
+            What would you like to do?
           </h2>
         </div>
         {/*Page Buttons*/}
