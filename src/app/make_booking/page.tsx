@@ -89,10 +89,10 @@ function Calendar({
 
     return (
       <div key={month} className="mb-8">
-        <div className="font-bold text-center mb-1">{monthName}</div>
+        <div className="font-bold text-center mb-1 text-gray-900">{monthName}</div>
         <div className="grid grid-cols-7 gap-1 text-xs">
           {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
-            <div key={d} className="font-semibold text-center">{d}</div>
+            <div key={d} className="font-semibold text-center text-gray-700">{d}</div>
           ))}
           {Array(firstDay).fill(null).map((_, i) => (
             <div key={"empty-" + i}></div>
@@ -108,15 +108,15 @@ function Calendar({
               isInRange = dateStr > rangeStart && dateStr < rangeEnd;
             }
 
-            let className = `py-2 rounded text-center cursor-pointer select-none transition-colors`;
+            let className = `py-2 rounded text-center cursor-pointer select-none transition-colors text-gray-900 font-medium`;
             if (isVehicleBooked || isFullyBooked) {
-              className += ` line-through bg-red-200 text-gray-500 cursor-not-allowed`;
+              className += ` line-through bg-red-200 text-gray-600 cursor-not-allowed`;
             } else if (isSelected) {
-              className += ` bg-blue-400 text-white font-bold`;
+              className += ` bg-blue-500 text-white font-bold`;
             } else if (isInRange) {
               className += ` bg-blue-200 text-blue-900`;
             } else {
-              className += ` bg-green-100 hover:bg-blue-100`;
+              className += ` bg-green-100 hover:bg-blue-100 text-gray-900`;
             }
 
             return (
@@ -137,7 +137,7 @@ function Calendar({
 
   return (
     <div className="flex-1 w-full p-4 overflow-y-auto">
-      <h3 className="text-xl font-bold mb-6 text-center">
+      <h3 className="text-xl font-bold mb-6 text-center text-gray-900">
         {selectedVehicle
           ? `Calendar for ${selectedVehicle.model} ${selectedVehicle.trim}`
           : `Select a date range - ${year}`}
