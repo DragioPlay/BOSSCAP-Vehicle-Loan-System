@@ -215,16 +215,16 @@ function BookingFormModal({ onClose, onBookingCreated, vehicle, selectedDates }:
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-xl shadow-xl min-w-[340px] max-w-sm relative">
         <button className="absolute top-2 right-4 text-2xl" onClick={onClose}>&times;</button>
-        <h3 className="text-lg font-bold mb-4 text-center text-gray-900">Confirm Booking</h3>
+        <h3 className="text-lg font-bold mb-4 text-center">Confirm Booking</h3>
         <div className="flex flex-col gap-2">
-          <div className="text-xs text-gray-500 text-center mb-2">
+          <div className="text-xs text-gray-600 font-medium text-center mb-2">
             Vehicle: {vehicle.model}
             <br />
             Dates: {selectedDates[0].split("-").reverse().join("/")} to {selectedDates[1].split("-").reverse().join("/")}
           </div>
-          <input className="border rounded px-2 py-1 text-gray-900" name="name" placeholder="Name*" value={form.name} onChange={handleInput} />
-          <input className="border rounded px-2 py-1 text-gray-900" name="email" placeholder="Email*" type="email" value={form.email} onChange={handleInput} />
-          <input className="border rounded px-2 py-1 text-gray-900" name="phone" placeholder="Phone*" value={form.phone} onChange={handleInput} />
+          <input className="border rounded px-2 py-1" name="name" placeholder="Name*" value={form.name} onChange={handleInput} />
+          <input className="border rounded px-2 py-1" name="email" placeholder="Email*" type="email" value={form.email} onChange={handleInput} />
+          <input className="border rounded px-2 py-1" name="phone" placeholder="Phone*" value={form.phone} onChange={handleInput} />
           <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" onClick={handleBooking}>
             Confirm Booking
           </button>
@@ -446,10 +446,10 @@ export default function Home() {
           <h2 className="text-xl font-semibold text-gray-700 tracking-wide">
             Make a Booking
           </h2>
-          <h3 className="text-l font-italic text-gray-700 tracking-wide">
+          <h3 className="text-l font-semibold text-gray-700 tracking-wide">
             To Book Click a Vehicle and click on the Calendar
           </h3>
-          <div className="mt-6 text-sm text-gray-500 text-center">
+          <div className="mt-6 text-sm text-gray-700 font-medium text-center">
             <span className="inline-block w-5 h-5 bg-red-200 mr-2 align-middle" /> Booked &nbsp;
             <span className="inline-block w-5 h-5 bg-green-100 mr-2 align-middle" /> Available &nbsp;
             <span className="inline-block w-5 h-5 bg-blue-400 mr-2 align-middle" /> Selected
@@ -520,8 +520,8 @@ export default function Home() {
                         <span className="font-semibold text-gray-900">{vehicle.vehicle_id} - </span>
                         <span className="font-semibold italic text-gray-900">{vehicle.nickname}</span>
                         <span className="ml-2 font-semibold text-gray-900">{vehicle.model}</span>
-                        <span className="ml-2 text-gray-500">{vehicle.trim}</span>
-                        <span className="ml-4 text-xs text-gray-400">{vehicle.vin}</span>
+                        <span className="ml-2 text-gray-700">{vehicle.trim}</span>
+                        <span className="ml-4 text-xs text-gray-600">{vehicle.vin}</span>
                         {vehicle.isUnavailable && (
                           <div className="text-red-700 text-xs mt-1">
                             Conflicting booking: {vehicle.overlapStart.split("-").reverse().join("/")} to {vehicle.overlapEnd.split("-").reverse().join("/")}
@@ -538,7 +538,7 @@ export default function Home() {
                 })}
               </ul>
             ) : (
-              selectedDates.length === 2 && <div className="text-center text-gray-500 mt-10">No vehicles available for the selected dates.</div>
+              selectedDates.length === 2 && <div className="text-center text-gray-700 mt-10">No vehicles available for the selected dates.</div>
             )}
 
             <button
@@ -592,5 +592,4 @@ export default function Home() {
     </div>
   );
 }
-
 
