@@ -276,10 +276,10 @@ function EditBookingModal({
 
         <div className="border-t pt-4">
           <h4 className="font-semibold mb-2 text-center text-gray-900">Edit Details</h4>
-          <div className="flex flex-col gap-2">
-            <input className="border rounded px-2 py-1" name="name" placeholder="Name" value={form.name} onChange={handleInput} />
-            <input className="border rounded px-2 py-1" name="email" placeholder="Email" type="email" value={form.email} onChange={handleInput} />
-            <input className="border rounded px-2 py-1" name="phone" placeholder="Phone" value={form.phone} onChange={handleInput} />
+          <div className="flex flex-col gap-2 text-gray-900">
+            <input className="border rounded px-2 py-1 text-gray-900" name="name" placeholder="Name" value={form.name} onChange={handleInput} />
+            <input className="border rounded px-2 py-1 text-gray-900" name="email" placeholder="Email" type="email" value={form.email} onChange={handleInput} />
+            <input className="border rounded px-2 py-1 text-gray-900" name="phone" placeholder="Phone" value={form.phone} onChange={handleInput} />
             <button
               className="mt-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition text-lg font-bold mx-auto"
               onClick={handleSave}
