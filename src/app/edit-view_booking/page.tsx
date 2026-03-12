@@ -255,7 +255,7 @@ function EditBookingModal({
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-xl shadow-xl min-w-[340px] max-h-[80vh] overflow-y-auto relative w-full max-w-2xl">
-        <button className="absolute top-2 right-4 text-3xl" onClick={onClose}>&times;</button>
+        <button className="absolute top-2 right-4 text-3xl text-gray-900" onClick={onClose}>&times;</button>
         <h3 className="text-xl font-bold mb-4 text-center text-gray-900">Edit Booking</h3>
 
         <div className="mb-4">
@@ -276,7 +276,7 @@ function EditBookingModal({
 
         <div className="border-t pt-4">
           <h4 className="font-semibold mb-2 text-center text-gray-900">Edit Details</h4>
-          <div className="flex flex-col gap-2 text-gray-900">
+          <div className="flex flex-col gap-2">
             <input className="border rounded px-2 py-1 text-gray-900" name="name" placeholder="Name" value={form.name} onChange={handleInput} />
             <input className="border rounded px-2 py-1 text-gray-900" name="email" placeholder="Email" type="email" value={form.email} onChange={handleInput} />
             <input className="border rounded px-2 py-1 text-gray-900" name="phone" placeholder="Phone" value={form.phone} onChange={handleInput} />
@@ -297,7 +297,8 @@ function EditBookingModal({
             {error && <div className="text-red-600 text-sm">{error}</div>}
             {success && <div className="text-green-600 text-sm">{success}</div>}
           </div>
-          <div className="text-xs text-gray-400 mt-2 text-center">
+          {/* Darkened from text-gray-400 to text-gray-600 */}
+          <div className="text-xs text-gray-600 font-medium mt-2 text-center">
             Booking: {selectedDates[0]} to {selectedDates[1]}
           </div>
         </div>
@@ -348,7 +349,7 @@ function BookingsForDateModal({ date, bookingsOnDate, vehicles, onClose, onEdit,
         <button className="absolute top-2 right-4 text-2xl text-gray-900" onClick={onClose}>&times;</button>
         <h3 className="text-lg font-bold mb-4 text-center text-gray-900">Bookings for {date}</h3>
         {filteredBookings.length === 0 ? (
-          <div className="text-center text-gray-500">No bookings on this day.</div>
+          <div className="text-center text-gray-700">No bookings on this day.</div>
         ) : (
           <ul className="flex flex-col gap-4">
             {filteredBookings.map((booking: { vehicle_id: any; booking_id: Key | null | undefined; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; start_date: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; end_date: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => {
@@ -356,7 +357,7 @@ function BookingsForDateModal({ date, bookingsOnDate, vehicles, onClose, onEdit,
               return (
                 <li key={booking.booking_id} className="border rounded-lg p-4 flex flex-col items-center gap-2 bg-gray-50">
                   <div className="text-center text-gray-900">
-                    <span className="font-semibold">Vehicle:</span> <span className="font-semibold italic">{vehicle?.nickname}</span> <span>{vehicle?.model}</span> <span>{vehicle?.trim}</span> <span className="text-xs text-gray-400">{vehicle?.vin}</span>
+                    <span className="font-semibold">Vehicle:</span> <span className="font-semibold italic">{vehicle?.nickname}</span> <span>{vehicle?.model}</span> <span>{vehicle?.trim}</span> <span className="text-xs text-gray-600">{vehicle?.vin}</span>
                   </div>
                   <div className="text-gray-900"><span className="font-semibold">Booked by:</span> {booking.name}</div>
                   <div className="text-gray-900"><span className="font-semibold">From:</span> {booking.start_date} <span className="font-semibold">To:</span> {booking.end_date}</div>
@@ -509,7 +510,7 @@ export default function Home() {
           <h2 className="text-xl font-semibold text-gray-700 tracking-wide">
             View/Edit Bookings
           </h2>
-          <h3 className="text-l font-italic text-gray-700 tracking-wide">
+          <h3 className="text-l font-semibold text-gray-700 tracking-wide">
             Click on a Booked Date to View and Edit the Bookings
           </h3>
         </div>
@@ -556,7 +557,7 @@ export default function Home() {
               </button>
             )}
 
-            <div className="mt-3 text-xs text-gray-500 text-center">
+            <div className="mt-3 text-xs text-gray-600 font-medium text-center">
               <span className="inline-block w-5 h-5 bg-red-200 mr-1 align-middle" /> Booked &nbsp;
               <span className="inline-block w-5 h-5 bg-green-100 mr-1 align-middle" /> Available &nbsp;
             </div>
@@ -590,7 +591,7 @@ export default function Home() {
                             </span>
                             <span className="font-semibold text-gray-900">{vehicle.nickname}</span>
                             {vehicleBookings.length === 0 && (
-                              <span className="text-gray-500 text-sm">No upcoming bookings</span>
+                              <span className="text-gray-700 text-sm">No upcoming bookings</span>
                             )}
                           </div>
 
