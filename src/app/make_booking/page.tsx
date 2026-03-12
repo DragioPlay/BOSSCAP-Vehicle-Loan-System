@@ -205,7 +205,7 @@ function BookingFormModal({ onClose, onBookingCreated, vehicle, selectedDates }:
   {/*Enter User Details pop-up*/}
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-xl min-w-[340px] max-w-sm relative">
+      <div className="bg-white bg-gray-900 p-6 rounded-xl shadow-xl min-w-[340px] max-w-sm relative">
         <button className="absolute top-2 right-4 text-2xl" onClick={onClose}>&times;</button>
         <h3 className="text-lg font-bold mb-4 text-center">Confirm Booking</h3>
         <div className="flex flex-col gap-2">
@@ -232,10 +232,10 @@ function BookingFormModal({ onClose, onBookingCreated, vehicle, selectedDates }:
 function VehicleUnavailableModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-xl min-w-[300px] max-w-sm relative">
+      <div className="bg-white bg-gray-900 p-6 rounded-xl shadow-xl min-w-[300px] max-w-sm relative">
         <button className="absolute top-2 right-4 text-2xl" onClick={onClose}>&times;</button>
         <h3 className="text-lg font-bold mb-4 text-center text-red-600">Vehicle Unavailable</h3>
-        <p className="text-center mb-4 text-gray-700 dark:text-gray-300">
+        <p className="text-center mb-4 text-gray-700 text-gray-300">
           The selected vehicle is unavailable for the chosen dates. Please select another vehicle or date range.
         </p>
         <div className="flex justify-center">
@@ -414,8 +414,8 @@ export default function Home() {
   });
 
   return (
-    <div className="font-sans flex flex-col items-center justify-start min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-900 dark:bg-gray-800">
-      <main className="w-full max-w-7xl mt-16 p-8 rounded-3xl shadow-xl bg-white/80 dark:bg-gray-900/80 flex flex-col items-center gap-8">
+    <div className="font-sans flex flex-col items-center justify-start min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 from-gray-900 bg-gray-800">
+      <main className="w-full max-w-7xl mt-16 p-8 rounded-3xl shadow-xl bg-white/80 bg-gray-900/80 flex flex-col items-center gap-8">
         {/*Logos and Titles*/}
         <div className="flex flex-row items-center justify-center gap-8 w-full">
           <Image src="/bosscap.png" alt="Bosscap Logo" width={160} height={40} className="object-contain" priority />
@@ -438,13 +438,13 @@ export default function Home() {
           </Link>
         </div>
         <div className="flex flex-col items-center w-full">
-          <h1 className="text-4xl font-extrabold mb-1 tracking-tight text-gray-900 dark:text-white drop-shadow">
+          <h1 className="text-4xl font-extrabold mb-1 tracking-tight text-gray-900 text-white drop-shadow">
             Vehicle Loan System
           </h1>
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 tracking-wide">
+          <h2 className="text-xl font-semibold text-gray-700 text-gray-300 tracking-wide">
             Make a Booking
           </h2>
-          <h3 className="text-l font-italic text-gray-700 dark:text-gray-300 tracking-wide">
+          <h3 className="text-l font-italic text-gray-700 text-gray-300 tracking-wide">
             To Book Click a Vehicle and click on the Calendar
           </h3>
           <div className="mt-6 text-sm text-gra  y-500 text-center">
@@ -471,7 +471,7 @@ export default function Home() {
               className={`px-4 py-2 rounded-lg font-semibold transition ${
                 vehicleCategory === cat
                   ? "bg-blue-600 text-white"
-                  : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-blue-400 hover:text-white"
+                  : "bg-gray-200 bg-gray-700 text-gray-700 text-gray-300 hover:bg-blue-400 hover:text-white"
               }`}
               onClick={() => setVehicleCategory(cat as "ALL" | "XLT" | "PRO")}
             >
@@ -500,7 +500,7 @@ export default function Home() {
             </h3>
 
             {availableVehicles.length > 0 ? (
-              <ul className="bg-white dark:bg-gray-800 rounded-lg shadow divide-y divide-gray-200 dark:divide-gray-700">
+              <ul className="bg-white bg-gray-800 rounded-lg shadow divide-y divide-gray-200 divide-gray-700">
                 {availableVehicles.map(vehicle => {
                   const highlightBlue = selectedVehicle?.vehicle_id === vehicle.vehicle_id;
                   const highlightGreen = selectedDates.length === 2 && !vehicle.isUnavailable && !highlightBlue;
@@ -508,17 +508,17 @@ export default function Home() {
                     <li
                       key={vehicle.vehicle_id}
                       className={`flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 transition cursor-pointer
-                        ${highlightGreen ? 'bg-green-200 dark:bg-green-700' : ''}
-                        ${highlightBlue ? 'bg-blue-200 dark:bg-blue-800' : ''}
-                        ${vehicle.isUnavailable ? 'bg-red-200 dark:bg-red-700' : ''}
+                        ${highlightGreen ? 'bg-green-200 bg-green-700' : ''}
+                        ${highlightBlue ? 'bg-blue-200 bg-blue-800' : ''}
+                        ${vehicle.isUnavailable ? 'bg-red-200 bg-red-700' : ''}
                       `}
                       onClick={() => handleVehicleSelect(vehicle)}
                     >
                       <div>
-                        <span className="font-semibold text-gray-900 dark:text-white">{vehicle.vehicle_id} - </span>
-                        <span className="font-semibold italic text-gray-900 dark:text-white">{vehicle.nickname }</span>
-                        <span className="ml-2 font-semibold text-gray-900 dark:text-white">{vehicle.model}</span>
-                        <span className="ml-2 text-gray-500 dark:text-gray-400">{vehicle.trim}</span>
+                        <span className="font-semibold text-gray-900 text-white">{vehicle.vehicle_id} - </span>
+                        <span className="font-semibold italic text-gray-900 text-white">{vehicle.nickname }</span>
+                        <span className="ml-2 font-semibold text-gray-900 text-white">{vehicle.model}</span>
+                        <span className="ml-2 text-gray-500 text-gray-400">{vehicle.trim}</span>
                         <span className="ml-4 text-xs text-gray-400">{vehicle.vin}</span>
                         {vehicle.isUnavailable && (
                           <div className="text-red-700 text-xs mt-1">
