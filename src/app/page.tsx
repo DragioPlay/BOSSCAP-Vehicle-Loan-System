@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-
 export default function Home() {
   return (
     <div className="relative font-sans flex flex-col items-center justify-start min-h-screen overflow-hidden">
@@ -15,8 +14,7 @@ export default function Home() {
         <source src="/background.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-
-      <main className="relative w-full max-w-xl mt-16 p-8 rounded-3xl shadow-xl bg-white bg-white-900/80 flex flex-col items-center gap-8 z-10">
+      <main className="relative w-full max-w-xl mt-16 p-8 rounded-3xl shadow-xl bg-white flex flex-col items-center gap-8 z-10">
         {/*BOSSCAP and AMQ logo side by side*/}
         <div className="flex flex-row items-center justify-center gap-8">
           <Image
@@ -41,7 +39,7 @@ export default function Home() {
           <h1 className="text-4xl font-extrabold mb-1 tracking-tight text-gray-900 drop-shadow">
             Vehicle Loan System
           </h1>
-          <h2 className="text-xl font-semibold text-gray-700 text-gray-300 tracking-wide">
+          <h2 className="text-xl font-semibold text-gray-700 tracking-wide">
             What would you like to do?
           </h2>
         </div>
@@ -61,7 +59,7 @@ export default function Home() {
           </Link>
           <Link
             href="/settings"
-            className="px-4 py-2 rounded-lg bg-gray-300 text-gray-1000 font-semibold text-lg shadow hover:bg-gray-400 transition-colors"
+            className="px-4 py-2 rounded-lg bg-gray-300 text-gray-800 font-semibold text-lg shadow hover:bg-gray-400 transition-colors"
           >
             ⚙︎
           </Link>
