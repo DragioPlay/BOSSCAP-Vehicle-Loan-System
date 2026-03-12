@@ -69,7 +69,7 @@ function Calendar({
     } else if (selectedDates.length === 1) {
       const start = selectedDates[0];
       const end = dateStr;
-      const [rangeStart, rangeEnd] = start < end ? [start, end] : [end, start];  
+      const [rangeStart, rangeEnd] = start < end ? [start, end] : [end, start];
       setSelectedDates([rangeStart, rangeEnd]);
     }
   }
@@ -135,7 +135,6 @@ function Calendar({
     )
   }
 
-  {/*Vehicle List*/}
   return (
     <div className="flex-1 w-full p-4 overflow-y-auto">
       <h3 className="text-xl font-bold mb-6 text-center">
@@ -201,11 +200,10 @@ function BookingFormModal({ onClose, onBookingCreated, vehicle, selectedDates }:
       setTimeout(() => setError(null), 2000);
     }
   }
-  
-  {/*Enter User Details pop-up*/}
+
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white bg-gray-900 p-6 rounded-xl shadow-xl min-w-[340px] max-w-sm relative">
+      <div className="bg-white p-6 rounded-xl shadow-xl min-w-[340px] max-w-sm relative">
         <button className="absolute top-2 right-4 text-2xl" onClick={onClose}>&times;</button>
         <h3 className="text-lg font-bold mb-4 text-center">Confirm Booking</h3>
         <div className="flex flex-col gap-2">
@@ -232,10 +230,10 @@ function BookingFormModal({ onClose, onBookingCreated, vehicle, selectedDates }:
 function VehicleUnavailableModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white bg-gray-900 p-6 rounded-xl shadow-xl min-w-[300px] max-w-sm relative">
+      <div className="bg-white p-6 rounded-xl shadow-xl min-w-[300px] max-w-sm relative">
         <button className="absolute top-2 right-4 text-2xl" onClick={onClose}>&times;</button>
         <h3 className="text-lg font-bold mb-4 text-center text-red-600">Vehicle Unavailable</h3>
-        <p className="text-center mb-4 text-gray-700 text-gray-300">
+        <p className="text-center mb-4 text-gray-700">
           The selected vehicle is unavailable for the chosen dates. Please select another vehicle or date range.
         </p>
         <div className="flex justify-center">
@@ -248,7 +246,7 @@ function VehicleUnavailableModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-{/*Main Components*/}
+{/*Main Component*/}
 export default function Home() {
   const [vehicles, setVehicles] = useState<any[]>([]);
   const [bookings, setBookings] = useState<any[]>([]);
@@ -261,7 +259,6 @@ export default function Home() {
   const [vehicleCategory, setVehicleCategory] = useState<"ALL" | "XLT" | "PRO">("ALL");
   const [calendarYear, setCalendarYear] = useState<number>(new Date().getFullYear());
 
-  {/*Imports all the vehicles and bookings from the database*/}
   async function loadData() {
     try {
       setLoading(true);
@@ -302,7 +299,6 @@ export default function Home() {
     else setSelectedVehicle(vehicle);
   }
 
-  {/*Accounts for timezone offset and sets the date*/}
   function handleGetAnyVehicleASAP() {
     const now = new Date();
     const utcMs = now.getTime() + now.getTimezoneOffset() * 60_000;
@@ -328,7 +324,6 @@ export default function Home() {
           setSelectedDates([dateStr]);
           setClosestAvailableDate(dateStr);
 
-          {/*Auto-scroll to the date in the calendar*/}
           setTimeout(() => {
             const el = document.getElementById(`calendar-day-${dateStr}`);
             if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -341,8 +336,6 @@ export default function Home() {
     alert(`No vehicles available in the next ${maxDays} days.`);
   }
 
-
-  {/*Book Now Button Function*/}
   function handleBookNow() {
     if (!selectedVehicle || selectedDates.length !== 2) return;
 
@@ -407,15 +400,14 @@ export default function Home() {
     setSelectedDates([]);
   }
 
-  {/*Filter bookings to the selected year*/}
   const filteredBookings = bookings.filter(b => {
     const yearOfBooking = new Date(b.start_date).getFullYear();
     return yearOfBooking === calendarYear;
   });
 
   return (
-    <div className="font-sans flex flex-col items-center justify-start min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 from-gray-900 bg-gray-800">
-      <main className="w-full max-w-7xl mt-16 p-8 rounded-3xl shadow-xl bg-white/80 bg-gray-900/80 flex flex-col items-center gap-8">
+    <div className="font-sans flex flex-col items-center justify-start min-h-screen bg-gradient-to-br from-gray-50 to-gray-200">
+      <main className="w-full max-w-7xl mt-16 p-8 rounded-3xl shadow-xl bg-white/80 flex flex-col items-center gap-8">
         {/*Logos and Titles*/}
         <div className="flex flex-row items-center justify-center gap-8 w-full">
           <Image src="/bosscap.png" alt="Bosscap Logo" width={160} height={40} className="object-contain" priority />
@@ -426,7 +418,7 @@ export default function Home() {
             href="/edit-view_booking"
             className="px-6 py-3 rounded-lg bg-purple-600 text-white font-semibold text-lg shadow hover:bg-purple-700 transition-colors"
           >
-           View/Edit
+            View/Edit
           </Link>
         </div>
         <div className="fixed top-5 left-3">
@@ -434,23 +426,23 @@ export default function Home() {
             href="/"
             className="px-6 py-3 rounded-lg bg-black text-white font-semibold text-lg shadow hover:bg-gray-800 transition-colors"
           >
-           🏠︎
+            🏠︎
           </Link>
         </div>
         <div className="flex flex-col items-center w-full">
-          <h1 className="text-4xl font-extrabold mb-1 tracking-tight text-gray-900 text-white drop-shadow">
+          <h1 className="text-4xl font-extrabold mb-1 tracking-tight text-gray-900 drop-shadow">
             Vehicle Loan System
           </h1>
-          <h2 className="text-xl font-semibold text-gray-700 text-gray-300 tracking-wide">
+          <h2 className="text-xl font-semibold text-gray-700 tracking-wide">
             Make a Booking
           </h2>
-          <h3 className="text-l font-italic text-gray-700 text-gray-300 tracking-wide">
+          <h3 className="text-l font-italic text-gray-700 tracking-wide">
             To Book Click a Vehicle and click on the Calendar
           </h3>
-          <div className="mt-6 text-sm text-gra  y-500 text-center">
-          <span className="inline-block w-5 h-5 bg-red-200 mr-2 align-middle" /> Booked &nbsp;
-          <span className="inline-block w-5 h-5 bg-green-100 mr-2 align-middle" /> Available   &nbsp;
-          <span className="inline-block w-5 h-5 bg-blue-400 mr-2 align-middle" /> Selected
+          <div className="mt-6 text-sm text-gray-500 text-center">
+            <span className="inline-block w-5 h-5 bg-red-200 mr-2 align-middle" /> Booked &nbsp;
+            <span className="inline-block w-5 h-5 bg-green-100 mr-2 align-middle" /> Available &nbsp;
+            <span className="inline-block w-5 h-5 bg-blue-400 mr-2 align-middle" /> Selected
           </div>
         </div>
 
@@ -471,7 +463,7 @@ export default function Home() {
               className={`px-4 py-2 rounded-lg font-semibold transition ${
                 vehicleCategory === cat
                   ? "bg-blue-600 text-white"
-                  : "bg-gray-200 bg-gray-700 text-gray-700 text-gray-300 hover:bg-blue-400 hover:text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-blue-400 hover:text-white"
               }`}
               onClick={() => setVehicleCategory(cat as "ALL" | "XLT" | "PRO")}
             >
@@ -480,7 +472,7 @@ export default function Home() {
           ))}
 
           <button
-            className={`px-4 py-2 rounded-lg font-semibold transition ${"bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition font-semibold"}`}
+            className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition font-semibold"
             onClick={() => setCalendarYear(prev => (prev === new Date().getFullYear() + 1 ? new Date().getFullYear() : new Date().getFullYear() + 1))}
           >
             {calendarYear === new Date().getFullYear() + 1 ? `← Back to ${new Date().getFullYear()} Calendar` : `Go to ${new Date().getFullYear() + 1} Calendar →`}
@@ -493,14 +485,14 @@ export default function Home() {
           <div className="flex-1 w-full lg:w-1/2">
             <h3 className="font-bold mb-4 text-center">
               {selectedDates.length === 2
-              ? `Available from ${selectedDates[0].split("-").reverse().join("/")} to ${selectedDates[1].split("-").reverse().join("/")}`
-              : selectedDates.length === 1
-              ? `Available from ${selectedDates[0].split("-").reverse().join("/")} to ?`
-              : 'Vehicles Available'}
+                ? `Available from ${selectedDates[0].split("-").reverse().join("/")} to ${selectedDates[1].split("-").reverse().join("/")}`
+                : selectedDates.length === 1
+                ? `Available from ${selectedDates[0].split("-").reverse().join("/")} to ?`
+                : 'Vehicles Available'}
             </h3>
 
             {availableVehicles.length > 0 ? (
-              <ul className="bg-white bg-gray-800 rounded-lg shadow divide-y divide-gray-200 divide-gray-700">
+              <ul className="bg-white rounded-lg shadow divide-y divide-gray-200">
                 {availableVehicles.map(vehicle => {
                   const highlightBlue = selectedVehicle?.vehicle_id === vehicle.vehicle_id;
                   const highlightGreen = selectedDates.length === 2 && !vehicle.isUnavailable && !highlightBlue;
@@ -508,17 +500,17 @@ export default function Home() {
                     <li
                       key={vehicle.vehicle_id}
                       className={`flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 transition cursor-pointer
-                        ${highlightGreen ? 'bg-green-200 bg-green-700' : ''}
-                        ${highlightBlue ? 'bg-blue-200 bg-blue-800' : ''}
-                        ${vehicle.isUnavailable ? 'bg-red-200 bg-red-700' : ''}
+                        ${highlightGreen ? 'bg-green-200' : ''}
+                        ${highlightBlue ? 'bg-blue-200' : ''}
+                        ${vehicle.isUnavailable ? 'bg-red-200' : ''}
                       `}
                       onClick={() => handleVehicleSelect(vehicle)}
                     >
                       <div>
-                        <span className="font-semibold text-gray-900 text-white">{vehicle.vehicle_id} - </span>
-                        <span className="font-semibold italic text-gray-900 text-white">{vehicle.nickname }</span>
-                        <span className="ml-2 font-semibold text-gray-900 text-white">{vehicle.model}</span>
-                        <span className="ml-2 text-gray-500 text-gray-400">{vehicle.trim}</span>
+                        <span className="font-semibold text-gray-900">{vehicle.vehicle_id} - </span>
+                        <span className="font-semibold italic text-gray-900">{vehicle.nickname}</span>
+                        <span className="ml-2 font-semibold text-gray-900">{vehicle.model}</span>
+                        <span className="ml-2 text-gray-500">{vehicle.trim}</span>
                         <span className="ml-4 text-xs text-gray-400">{vehicle.vin}</span>
                         {vehicle.isUnavailable && (
                           <div className="text-red-700 text-xs mt-1">
