@@ -38,7 +38,7 @@ export default function Home() {
         </div>
         {/*Titles*/}
         <div className="flex flex-col items-center">
-          <h1 className="text-4xl font-extrabold mb-1 tracking-tight text-gray-900 text-white drop-shadow">
+          <h1 className="text-4xl font-extrabold mb-1 tracking-tight text-gray-900 drop-shadow">
             Vehicle Loan System
           </h1>
           <h2 className="text-xl font-semibold text-gray-700 text-gray-300 tracking-wide">
