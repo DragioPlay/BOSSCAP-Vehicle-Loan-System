@@ -493,7 +493,7 @@ export default function Home() {
         <div className="flex flex-col lg:flex-row w-full gap-8">
           {/*Vehicle List*/}
           <div className="flex-1 w-full lg:w-1/2">
-            <h3 className="font-bold mb-4 text-center">
+            <h3 className="font-bold mb-4 text-center text-gray-900">
               {selectedDates.length === 2
                 ? `Available from ${selectedDates[0].split("-").reverse().join("/")} to ${selectedDates[1].split("-").reverse().join("/")}`
                 : selectedDates.length === 1
